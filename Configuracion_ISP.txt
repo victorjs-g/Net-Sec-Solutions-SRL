@@ -1,60 +1,94 @@
--Configuración ISP
-NetSec Solutions SRL - Empresa 1
+! ============================================================
+! ISP - Net-Sec Solutions SRL
+! Empresa 1
+! ============================================================
 
-Ena
+
+! ============================================================
+! CONFIGURACIÓN BÁSICA
+! ============================================================
+
+ena
 conf t
 hostname ISP
 
+
+! ============================================================
+! INTERFACES
+! ============================================================
+
+! --- Santo Domingo ---
 int e0/0
-description SANTO-DOMINGO
-duplex full
-ip address 1.0.0.2 255.255.255.252
-ip nat inside
-no shut
-exit
+ description SANTO-DOMINGO
+ duplex full
+ ip address 1.0.0.2 255.255.255.252
+ ip nat inside
+ no shut
+ exit
 
-int e0/1 
-description STGO
-duplex full
-ip address 1.0.0.10 255.255.255.252
-ip nat inside
-no shut
-exit
+! --- Santiago ---
+int e0/1
+ description STGO
+ duplex full
+ ip address 1.0.0.10 255.255.255.252
+ ip nat inside
+ no shut
+ exit
 
+! --- Romana ---
 int e0/2
-description ROM
-duplex full
-ip address 1.0.0.6 255.255.255.252
-ip nat inside
-no shut
-exit
+ description ROM
+ duplex full
+ ip address 1.0.0.6 255.255.255.252
+ ip nat inside
+ no shut
+ exit
 
+! --- Internet ---
 int e0/3
-description INTERNET
-duplex full
-ip address dhcp
-ip nat outside
-no shut
-exit
+ description INTERNET
+ duplex full
+ ip address dhcp
+ ip nat outside
+ no shut
+ exit
 
+
+! ============================================================
+! DHCP
+! ============================================================
+
+! --- Santo Domingo ---
 ip dhcp pool SAN-DOM
-network 1.0.0.0 255.255.255.252
-default-router 1.0.0.2
-exit
+ network 1.0.0.0 255.255.255.252
+ default-router 1.0.0.2
+ exit
 
+! --- Romana ---
 ip dhcp pool R-ROM
-network 1.0.0.4 255.255.255.252
-default-router 1.0.0.6
-exit
+ network 1.0.0.4 255.255.255.252
+ default-router 1.0.0.6
+ exit
 
+! --- Santiago ---
 ip dhcp pool STGO
-network 1.0.0.8 255.255.255.252
-default-router 1.0.0.10
-exit
+ network 1.0.0.8 255.255.255.252
+ default-router 1.0.0.10
+ exit
+
+
+! ============================================================
+! NAT
+! ============================================================
 
 access-list 10 permit 1.0.0.0 0.0.0.255
 
 ip nat inside source list 10 interface Ethernet0/3 overload
+
+
+! ============================================================
+! FINALIZAR CONFIGURACIÓN
+! ============================================================
 
 end
 wr
