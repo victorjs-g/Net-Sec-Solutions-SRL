@@ -1,56 +1,107 @@
-# Net-Sec-Solutions-SRL
-NetSec Solutions SRL | Infraestructura de Red y Seguridad Integral  Este repositorio contiene la documentación técnica, scripts de automatización y archivos de configuración que componen el despliegue del proyecto final de infraestructura para NetSec Solutions SRL.   
+# NetSec Solutions SRL
 
-Documentación de Infraestructura: Proyecto NetSec Solutions SRL
-1. Resumen Ejecutivo
-El presente proyecto detalla la implementación de una infraestructura de red corporativa robusta y segura para NetSec Solutions SRL (Empresa 1). La arquitectura interconecta tres sedes estratégicas en la República Dominicana: Santiago, Santo Domingo y La Romana, utilizando una topología Hub-and-Spoke altamente escalable mediante tecnologías de vanguardia en enrutamiento y seguridad perimetral.
+### Infraestructura de Red & Ciberseguridad Avanzada
 
-2. Arquitectura de Conectividad (WAN)
-La columna vertebral de la red se basa en una solución DMVPN (Dynamic Multipoint VPN) que permite la comunicación directa y segura entre sucursales:
+Proyecto de infraestructura tecnológica desarrollado para **NetSec Solutions SRL**, enfocado en el diseño, implementación y documentación de una arquitectura de red **segura, escalable y de alta disponibilidad**.
 
-Nodo Central (Hub): Ubicado en Santiago (R-SANTIAGO), actúa como el concentrador principal de los túneles y el punto de tránsito para el tráfico entre sedes.
+La solución integra conectividad entre **Santo Domingo, Santiago y La Romana**, utilizando segmentación de red, enrutamiento dinámico, VPN, redundancia y controles de seguridad.
 
-Nodos Remotos (Spokes): Las sedes de Santo Domingo (SAN-DOM) y Romana (R-ROM) se conectan dinámicamente al Hub.
+---
 
-Cifrado de Datos: Todo el tráfico WAN está protegido mediante IPSec con algoritmos de alta seguridad (AES de 256 bits y SHA-512), garantizando la confidencialidad e integridad de la información.
+## 🌐 Arquitectura
 
-Protocolo de Enrutamiento: Se utiliza OSPFv2 para el intercambio dinámico de rutas, asegurando una convergencia rápida y redundancia en el transporte de datos.
+```text
+                         ┌─────────────────┐
+                         │    SANTIAGO     │
+                         │      HUB        │
+                         │   Data Center   │
+                         └────────┬────────┘
+                                  │
+                           DMVPN + IPSec
+                         ┌────────┴────────┐
+                         │                 │
+                  ┌──────▼──────┐   ┌────▼────────┐
+                  │   SANTO     │   │ LA ROMANA   │
+                  │   DOMINGO   │   │    SPOKE    │
+                  │    SPOKE    │   └─────────────┘
+                  └─────────────┘
+```
 
-3. Segmentación y Distribución Local (LAN)
-Cada sede cuenta con una segmentación basada en VLANs para organizar los departamentos y mejorar el rendimiento:
+### Sedes
 
-Sede Santiago (Centro de Operaciones)
-Segmentos: TI (Gestión), Data Center y Administración.
+| Sede              | Rol   | Características                    |
+| ----------------- | ----- | ---------------------------------- |
+| **Santiago**      | Hub   | Data Center y servicios centrales  |
+| **Santo Domingo** | Spoke | Distribución redundante y HSRP     |
+| **La Romana**     | Spoke | Segmentación y seguridad de acceso |
 
-Funciones: Aloja la granja de servidores que provee servicios críticos a toda la organización.
+---
 
-Sede Santo Domingo (Núcleo Operativo)
-Infraestructura: Diseño de alta disponibilidad con switches multicapa (SWM1 y SWM2) utilizando HSRP para redundancia de puerta de enlace.
+## 🔐 Tecnologías
 
-Segmentos: Marketing, RRHH, Ventas y Contabilidad.
+* **DMVPN + IPSec** — conectividad segura entre sedes
+* **OSPFv2** — enrutamiento dinámico
+* **VLAN / 802.1Q / VTP** — segmentación de red
+* **HSRP** — alta disponibilidad
+* **VLSM** — optimización del direccionamiento IP
+* **AAA / FreeRADIUS** — autenticación centralizada
+* **DHCP / DNS** — servicios de infraestructura
+* **Postfix / Dovecot** — servicios de correo
+* **DHCP Snooping / Port-Security / BPDU Guard** — seguridad de Capa 2
+* **SSH + ACL** — administración segura
 
-Sede Romana (Logística)
-Segmentos: Almacén, Proyectos y Gerencia.
+---
 
-Control: Implementación de VTP para la gestión centralizada de VLANs y seguridad de puerto.
+## 🖥️ Infraestructura
 
-4. Servicios de Red y Seguridad (Linux Stack)
-La inteligencia de la red se apoya en dos servidores basados en Linux (10.17.0.43 y 10.17.0.44) que centralizan las operaciones:
+La arquitectura contempla infraestructura Cisco para routing y switching, junto con servidores dedicados para los servicios de red y seguridad.
 
-Gestión de Identidades (AAA): Implementación de FreeRADIUS para la autenticación centralizada de los administradores en todos los equipos de red.
+### Servicios principales
 
-Servicios de Directorio y Red: Servidor dual de DHCP y DNS (via dnsmasq) que automatiza la asignación de IPs y la resolución de nombres bajo el dominio corporativo netsec.com.do.
+```text
+10.17.0.43  →  RADIUS / Servicios de autenticación
+10.17.0.44  →  DHCP / DNS
+```
 
-Colaboración: Suite de mensajería corporativa configurada con Postfix (SMTP) y Dovecot (IMAP/POP3), con buzones virtuales para el personal clave.
+El diseño utiliza bloques privados **10.16.0.0/16, 10.17.0.0/16 y 10.18.0.0/16** para la distribución de las redes por sede.
 
-Seguridad Interna: Uso de DHCP Snooping, Port-Security (Sticky MACs) y BPDU Guard en la capa de acceso para mitigar ataques internos y bucles de red.
+---
 
-Nota de Seguridad: Todos los accesos administrativos (VTY) están restringidos mediante Listas de Control de Acceso (ACL) que solo permiten la gestión desde la red de TI en Santiago, cumpliendo con los estándares de seguridad de NetSec Solutions SRL.
+## 📂 Estructura
 
-Componente,Detalle Técnico
-Dominio Corporativo,netsec-solutions.com.do
-Esquema de Direccionamiento,Privado Clase A (10.16.0.0/14 modificado)
-VPN ID / NHRP,Network-ID: 10 / Auth: NetSec
-Cifrado IPSec,AES + SHA-512 (Diffie-Hellman Grupo 14)
-Usuario Admin,admin / N3tS3c-2025
-Servidores Críticos,10.17.0.43 (RADIUS/Mail) y 10.17.0.44 (DHCP/DNS)
+```text
+Net-Sec-Solutions-SRL/
+│
+├── Configuraciones/
+│   ├── Santiago/
+│   ├── Santo-Domingo/
+│   └── La-Romana/
+│
+├── Documentacion/
+│
+├── Propuesta/
+│
+└── README.md
+```
+
+---
+
+## 🎯 Objetivos
+
+* Diseñar una infraestructura de red corporativa segura y escalable.
+* Interconectar las tres sedes mediante una WAN segura.
+* Implementar segmentación mediante VLANs y VLSM.
+* Garantizar disponibilidad mediante mecanismos de redundancia.
+* Centralizar la autenticación y los servicios de infraestructura.
+* Aplicar controles de seguridad en las capas de acceso y administración.
+* Documentar la arquitectura y las configuraciones implementadas.
+
+---
+
+## 🏢 NetSec Solutions SRL
+
+**Infraestructura de Red & Ciberseguridad Avanzada**
+
+> *Seguridad, disponibilidad y conectividad para infraestructuras críticas.*
+
+---
