@@ -199,7 +199,6 @@ ip nat inside source list PAT int e0/0 overload
 
 exit
 
----
 ! ============================================================
 ! NET-SEC SOLUTIONS SRL
 ! EMPRESA 1 - SANTIAGO
